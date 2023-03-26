@@ -1,0 +1,18 @@
+
+
+{
+  "name": "up-down-node-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Zaman Shovon <mohammad.moniruzzaman@brainstation-23.com>",
+  "license": "UNLICENSED",
+  "description": "",
+  "devDependencies": {
+    "prettier": "^2.1.2"
+  }
+}
