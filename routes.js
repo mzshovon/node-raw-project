@@ -6,7 +6,6 @@
  */
 
 // Dependencies
-
 const {sampleHandler, sample} = require('./avengers/routeAvenegers/routeHandlers');
 
 const routes = {
