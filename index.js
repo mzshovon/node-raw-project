@@ -7,6 +7,7 @@
 
 const http = require('http');
 const { handleReqRes } = require('./asgards/handleReqRes');
+const environment = require('./asgards/environments');
 
 const app = {};
 
@@ -18,8 +19,8 @@ app.config = {
 // Configure a server
 app.createServer = () => {
     const server = http.createServer(app.handleReqRes);
-    server.listen(app.config.port, () => {
-        console.log(`Listening to port ${app.config.port}`);
+    server.listen(environment.port, () => {
+        console.log(`Listening to port ${environment.port}`);
     });
 
 }

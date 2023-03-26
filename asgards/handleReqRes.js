@@ -27,16 +27,6 @@ handler.handleReqRes = (req, res) => {
 
     const chosenHandler = routes[trimmedPath] ?? notFoundHandler;
 
-    chosenHandler(requestProperties, (statusCode, payload) => {
-        statusCode = typeof(statusCode) === 'number' ? statusCode : 500;
-        payload = typeof(payload) == 'object' ? payload : {};
-
-        const payloadString = JSON.stringify(payload);
-
-        res.writeHead(statusCode);
-        res.end(payloadString);
-    });
-
     req.on('data', (buffer) => {
         realData += decoder.write(buffer);
     });
@@ -44,6 +34,16 @@ handler.handleReqRes = (req, res) => {
     console.log(queryString, headersObject, method, parsedUrl);
     // Response handling
     req.on('end', () => {
+        // Choose which response done from route
+        chosenHandler(requestProperties, (statusCode, payload) => {
+            statusCode = typeof(statusCode) === 'number' ? statusCode : 500;
+            payload = typeof(payload) == 'object' ? payload : {};
+            const payloadString = JSON.stringify(payload);
+    
+            res.writeHead(statusCode);
+            res.end(payloadString);
+        });
+
         realData += decoder.end();
         console.log(realData);
         res.end("Node js application is successfully terminated");
