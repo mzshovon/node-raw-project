@@ -6,10 +6,12 @@
  */
 
 // Dependencies
-const {sampleHandler, sample} = require('./avengers/routeAvenegers/routeHandlers');
+const {sampleHandler} = require('./avengers/routeAvenegers/routeHandlers');
+const {userHandler} = require('./avengers/routeAvenegers/userHandler');
 
 const routes = {
-    'sample' : sampleHandler
+    'sample' : sampleHandler,
+    'user' : userHandler,
 };
 
 module.exports = routes

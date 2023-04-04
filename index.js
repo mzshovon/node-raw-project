@@ -26,9 +26,9 @@ data.update('test', 'newFile', {name : 'India', programmingLanguage : 'C#'}, (er
     console.log("error was "+ err);
 });
 
-// data.delete('test', 'newFile', (err)=> {
-//     console.log("error was "+ err);
-// });
+data.delete('test', 'newFile', (err)=> {
+    console.log("error was "+ err);
+});
 
 // App config
 app.config = {
