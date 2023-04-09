@@ -3,6 +3,8 @@ const { StringDecoder } = require('string_decoder');
 const {notFoundHandler} = require('../avengers/routeAvenegers/notFoundHandler');
 const routes = require('../routes');
 const handler = {};
+const {parseJSON} = require('../asgards/utilities');
+const { parse } = require('path');
 
 handler.handleReqRes = (req, res) => {
     // Request handling from server
@@ -30,12 +32,13 @@ handler.handleReqRes = (req, res) => {
     req.on('data', (buffer) => {
         realData += decoder.write(buffer);
     });
-
-    console.log(queryString, headersObject, method, parsedUrl);
     // Response handling
     req.on('end', () => {
+        realData += decoder.end();
+        requestProperties.body = parseJSON(realData);
         // Choose which response done from route
         chosenHandler(requestProperties, (statusCode, payload) => {
+            
             statusCode = typeof(statusCode) === 'number' ? statusCode : 500;
             payload = typeof(payload) == 'object' ? payload : {};
             const payloadString = JSON.stringify(payload);
@@ -47,7 +50,6 @@ handler.handleReqRes = (req, res) => {
 
         realData += decoder.end();
         console.log(realData);
-        res.end("Node js application is successfully terminated");
     });
 };
 

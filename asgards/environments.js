@@ -11,17 +11,20 @@ const environments = {};
 
 environments.staging = {
     port : 3000,
-    envName : 'staging'    
+    envName : 'staging',
+    secretKey: 'gfgdfhfdhl423342'    
 };
 
 environments.production = {
     port : 3000,
-    envName : 'production'    
+    envName : 'production',
+    secretKey: 'wdfwer23r42r34r434'    
 };
 
 environments.local = {
     port : 3030,
-    envName : 'local'    
+    envName : 'local',
+    secretKey: '456436lg;sdfgd'      
 };
 
 // Detemine which value is assigned

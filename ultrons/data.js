@@ -55,6 +55,7 @@ lib.update = (dir, file, data, callback) => {
             fs.ftruncate(fileDescriptor, (err) => {
                 if(!err) {
                     fs.writeFile(fileDescriptor, stringData, (err) => {
+                        console.log('open', err);
                         if (err){
                             console.log("SOmething went wrong with error "+err);
                         } else {
