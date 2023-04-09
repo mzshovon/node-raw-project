@@ -8,6 +8,7 @@
 
 const handler = {};
 const data = require('../../ultrons/data');
+const {hash} = require('../../asgards/utilities');
 
 
 handler.userHandler = (requestProperties, callback) => {
@@ -26,6 +27,7 @@ handler._users.get = (requestProperties, callback) => {
 };
 
 handler._users.post = (requestProperties, callback) => {
+
     const firstName = typeof(requestProperties.body.firstName) === 'string' && requestProperties.body.firstName.trim().length > 0 ? 
                         requestProperties.body.firstName : false;
 
@@ -38,20 +40,32 @@ handler._users.post = (requestProperties, callback) => {
     const password = typeof(requestProperties.body.password) === 'string' && requestProperties.body.password.trim().length > 7 ? 
                         requestProperties.body.password : false;
 
-    const termsAndAgreement = typeof(requestProperties.body.termsAndAgreement) === 'boolean' && requestProperties.body.termsAndAgreement.trim().length > 0 ? 
+    const termsAndAgreement = typeof(requestProperties.body.termsAndAgreement) === 'boolean' ? 
                         requestProperties.body.termsAndAgreement : false;
 
     if(firstName && lastName && mobileNumber && password && termsAndAgreement) {
         // User must not be existed
-        data.read('users', mobileNumber, (err, user) => {
-            if(err) {
+        data.read('users', mobileNumber, (err1) => {
+            console.log('err', err1);
+            if(err1) {
                 let userObject = {
                     firstName,
                     lastName,
                     mobileNumber,
-                    password,
+                    password : hash(password),
                     termsAndAgreement
                 }
+                data.create('users', mobileNumber, userObject, (err2) => {
+                    if(!err2) {
+                        callback(200, {
+                            message: 'User is created successfully'
+                        })
+                    } else {
+                        callback(500, {
+                            error: "Couldn't create file/directory"
+                        });
+                    }
+                });
             } else {
                 callback(500, {
                     error: "There is a problem in your server side"
