@@ -34,4 +34,16 @@ utilities.hash = (str) => {
     }
 }
 
+// Random token string generating
+utilities.gererateRandomString = (strlen) => {
+    let possibleString = "abcdefghijklmnopqrstuvwxyz0123456789!@#$";
+    let output = "";
+
+    for(let i= 0; i<= strlen; i++) {
+        let randomStringVal = possibleString.charAt(Math.floor (Math.random() * possibleString.length))
+        output += randomStringVal;
+    }
+    return output;
+}
+
 module.exports = utilities;
