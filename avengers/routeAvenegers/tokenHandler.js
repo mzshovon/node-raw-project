@@ -23,7 +23,25 @@ handler.tokenHandler = (requestProperties, callback) => {
 handler._token = {};
 
 handler._token.get = (requestProperties, callback) => {
+    const tokenId = typeof(requestProperties.queryString.tokenId) === 'string' && requestProperties.queryString.tokenId.trim().length > 0 ? 
+    requestProperties.queryString.tokenId : false;
 
+    if(tokenId) {
+        data.read('tokens', tokenId, (err, tokenInfo) => {
+            const tokenData = { ... parseJSON(tokenInfo) };
+            if(!err && tokenData) {
+                callback(200, tokenData);
+            } else {
+                callback(404, {
+                    error: 'Token not found'
+                })
+            }
+        })
+    } else {
+        callback(404, {
+            error: 'Token not found'
+        })
+    }
 };
 
 handler._token.post = (requestProperties, callback) => {
@@ -59,17 +77,34 @@ handler._token.post = (requestProperties, callback) => {
                 })
             } else {
                 callback(400, {
-                    error: "Wrong password!"
+                    error: "Wrong Token!"
                 });
             }
         })
     } else {
-
+        callback(400, {
+            error: "Wrong Token!"
+        });
     }
 };
 
 handler._token.put = (requestProperties, callback) => {
+    const tokenId = typeof(requestProperties.body.tokenId) === 'string' && requestProperties.body.tokenId.trim().length > 0 ? 
+        requestProperties.body.tokenId : false;
+    const extend = typeof(requestProperties.body.extend) === 'boolean' ? 
+        requestProperties.body.extend : false;
+    
+    if(tokenId && extend) {
+        data.read('tokens', tokenId, (err1, tokenData) => {
+            const tokenObject = { ...parseJSON(tokenData)}
+        })
 
+    } else {
+        callback(400, {
+            error: "There is an error in your request!"
+        });
+    }
+        
 };
 
 handler._token.delete = (requestProperties, callback) => {
