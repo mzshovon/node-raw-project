@@ -8,7 +8,7 @@
 
 const handler = {};
 const data = require('../../ultrons/data');
-const {hash} = require('../../asgards/utilities');
+const {hash, parseJSON} = require('../../asgards/utilities');
 
 
 handler.userHandler = (requestProperties, callback) => {
@@ -23,7 +23,26 @@ handler.userHandler = (requestProperties, callback) => {
 handler._users = {};
 
 handler._users.get = (requestProperties, callback) => {
-    callback(200);
+    const mobileNumber = typeof(requestProperties.queryString.mobileNumber) === 'string' && requestProperties.queryString.mobileNumber.trim().length === 11 ? 
+    requestProperties.queryString.mobileNumber : false;
+
+    if(mobileNumber) {
+        data.read('users', mobileNumber, (err, userInfo) => {
+            const user = { ... parseJSON(userInfo) };
+            if(!err && user) {
+                delete user.password;
+                callback(200, user);
+            } else {
+                callback(404, {
+                    error: 'User not found'
+                })
+            }
+        })
+    } else {
+        callback(404, {
+            error: 'User not found'
+        })
+    }
 };
 
 handler._users.post = (requestProperties, callback) => {
