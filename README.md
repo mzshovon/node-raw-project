@@ -1,5 +1,5 @@
 
-# Project Title
+# Server uptime monitoring
 
 A raw nodeJs project for the begineers.
 
