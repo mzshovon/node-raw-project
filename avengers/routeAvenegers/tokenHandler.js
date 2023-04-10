@@ -91,14 +91,31 @@ handler._token.post = (requestProperties, callback) => {
 handler._token.put = (requestProperties, callback) => {
     const tokenId = typeof(requestProperties.body.tokenId) === 'string' && requestProperties.body.tokenId.trim().length > 0 ? 
         requestProperties.body.tokenId : false;
-    const extend = typeof(requestProperties.body.extend) === 'boolean' ? 
-        requestProperties.body.extend : false;
+    const extend = typeof(requestProperties.body.extend) === 'boolean' && requestProperties.body.extend ?
+        true : false;
     
     if(tokenId && extend) {
         data.read('tokens', tokenId, (err1, tokenData) => {
-            const tokenObject = { ...parseJSON(tokenData)}
+            const tokenObject = parseJSON(tokenData);
+            if(tokenObject.expires > Date.now()) {
+                tokenObject.expires = Date.now() + 60 * 60 * 1000;
+                data.update('tokens', tokenId, tokenObject, (err2) => {
+                    if(!err2) {
+                        callback(200, {
+                            message: "Token updated successfully"
+                        });
+                    } else {
+                        callback(400, {
+                            error: "Token can't be updated!"
+                        });
+                    }
+                })
+            } else {
+                callback(400, {
+                    error: "Token already expires!"
+                });
+            }
         })
-
     } else {
         callback(400, {
             error: "There is an error in your request!"
@@ -108,7 +125,34 @@ handler._token.put = (requestProperties, callback) => {
 };
 
 handler._token.delete = (requestProperties, callback) => {
+    const tokenId = typeof(requestProperties.queryString.tokenId) === 'string' && requestProperties.queryString.tokenId.trim().length > 0 ? 
+    requestProperties.queryString.tokenId : false;
 
+    if(tokenId) {
+        data.read('tokens', tokenId, (err, tokenData) => {
+            if(!err && tokenData) {
+                data.delete('tokens', tokenId, (err1) => {
+                    if(!err1) {
+                        callback(200, {
+                            message: "Token deleted successfully"
+                        })
+                    } else {
+                        callback(500, {
+                            error: 'Not valid request/ No permission to unlink file'
+                        })
+                    }
+                })
+            } else {
+                callback(404, {
+                    error: 'Token not found'
+                })
+            }
+        })
+    } else {
+        callback(404, {
+            error: 'Token not found'
+        })
+    }
 };
 
 module.exports = handler;
